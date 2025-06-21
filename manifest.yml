@@ -1,0 +1,45 @@
+lzc-sdk-version: "0.1"
+name: Group Office
+package: cloud.lazycat.app.groupoffice
+version: 25.0.31
+description: Open Source groupware & CRM Software
+homepage: https://github.com/Intermesh/docker-groupoffice
+author: Intermesh
+application:
+  subdomain: groupoffice
+  background_task: true
+  public_path:
+    - /
+  routes:
+    - /=http://groupoffice:80/
+services:
+  groupoffice:
+    image: registry.lazycat.cloud/czyt/intermesh/groupoffice:56dcf1eddb8de7ac
+    environment:
+      - MYSQL_USER=groupoffice
+      - MYSQL_PASSWORD=groupoffice
+      - MYSQL_DATABASE=groupoffice
+    depends_on:
+      - db
+    binds:
+      - /lzcapp/var/godata:/var/lib/groupoffice
+      - /lzcapp/pkg/content/etc/groupoffice:/etc/groupoffice
+      - /lzcapp/var/gostudio:/usr/local/share/groupoffice/go/modules/studio
+    setup_script: |
+      mkdir /home/groupoffice
+      chown -R www-data:www-data /var/lib/groupoffice /etc/groupoffice /usr/local/share/groupoffice/go/modules/studio /home/groupoffice
+  db:
+    image: registry.lazycat.cloud/czyt/library/mariadb:56238656497c683a
+    environment:
+      - MYSQL_ROOT_PASSWORD=groupoffice
+      - MARIADB_AUTO_UPGRADE=1
+      - MYSQL_USER=groupoffice
+      - MYSQL_PASSWORD=groupoffice
+      - MYSQL_DATABASE=groupoffice
+    binds:
+      - /lzcapp/var/dbdata:/var/lib/mysql
+    health_check:
+      test:
+        - CMD-SHELL
+        - healthcheck.sh --connect --innodb_initialized
+      start_period: 30s
