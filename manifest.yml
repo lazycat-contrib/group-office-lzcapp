@@ -1,7 +1,7 @@
 lzc-sdk-version: "0.1"
 name: Group Office
 package: cloud.lazycat.app.groupoffice
-version: 25.0.31
+version: 25.0.32
 description: Open Source groupware & CRM Software
 homepage: https://github.com/Intermesh/docker-groupoffice
 author: Intermesh
@@ -14,7 +14,7 @@ application:
     - /=http://groupoffice:80/
 services:
   groupoffice:
-    image: registry.lazycat.cloud/czyt/intermesh/groupoffice:56dcf1eddb8de7ac
+    image: registry.lazycat.cloud/czyt/intermesh/groupoffice:37585e76598c841c
     environment:
       - MYSQL_USER=groupoffice
       - MYSQL_PASSWORD=groupoffice
