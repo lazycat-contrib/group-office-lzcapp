@@ -1,23 +1,19 @@
-lzc-sdk-version: "0.1"
-name: Group Office
-package: cloud.lazycat.app.groupoffice
-version: 25.0.32
-description: Open Source groupware & CRM Software
-homepage: https://github.com/Intermesh/docker-groupoffice
-author: Intermesh
 application:
   subdomain: groupoffice
   background_task: true
   public_path:
     - /
-  routes:
-    - /=http://groupoffice:80/
+  upstreams:
+    - location: /
+      backend: http://groupoffice:80/
+
 services:
   groupoffice:
-    image: registry.lazycat.cloud/czyt/intermesh/groupoffice:37585e76598c841c
+    # upstream: intermesh/groupoffice:25.0.32
+    image: docker.1ms.run/intermesh/groupoffice:25.0.32
     environment:
       - MYSQL_USER=groupoffice
-      - MYSQL_PASSWORD=groupoffice
+      - MYSQL_PASSWORD={{ stable_secret "groupoffice_db_password" }}
       - MYSQL_DATABASE=groupoffice
     depends_on:
       - db
@@ -29,16 +25,17 @@ services:
       mkdir /home/groupoffice
       chown -R www-data:www-data /var/lib/groupoffice /etc/groupoffice /usr/local/share/groupoffice/go/modules/studio /home/groupoffice
   db:
-    image: registry.lazycat.cloud/czyt/library/mariadb:56238656497c683a
+    # upstream: library/mariadb:11.8
+    image: docker.1ms.run/library/mariadb:11.8
     environment:
-      - MYSQL_ROOT_PASSWORD=groupoffice
+      - MYSQL_ROOT_PASSWORD={{ stable_secret "groupoffice_root_password" }}
       - MARIADB_AUTO_UPGRADE=1
       - MYSQL_USER=groupoffice
-      - MYSQL_PASSWORD=groupoffice
+      - MYSQL_PASSWORD={{ stable_secret "groupoffice_db_password" }}
       - MYSQL_DATABASE=groupoffice
     binds:
       - /lzcapp/var/dbdata:/var/lib/mysql
-    health_check:
+    healthcheck:
       test:
         - CMD-SHELL
         - healthcheck.sh --connect --innodb_initialized

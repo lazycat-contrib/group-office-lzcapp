@@ -1,0 +1,14 @@
+package: cloud.lazycat.app.groupoffice
+version: 25.0.32
+name: Group Office
+description: "Open Source groupware & CRM Software"
+min_os_version: "1.5.0"
+homepage: https://github.com/Intermesh/docker-groupoffice
+author: Intermesh
+locales:
+  zh:
+    description: "开源群组协作与客户关系管理软件"
+    name: Group Office
+  en:
+    description: "Open Source groupware & CRM Software"
+    name: Group Office

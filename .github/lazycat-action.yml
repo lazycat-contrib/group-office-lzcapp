@@ -1,0 +1,49 @@
+version: 1
+
+project:
+  root: .
+  build_config: lzc-build.yml
+  package_file: package.yml
+  output: .lazycat-build/groupoffice.lpk
+  target_arch: amd64
+
+update:
+  strategy: publish
+  allow_downgrade: false
+  version_source:
+    type: image
+    image: groupoffice
+build:
+  run_buildscript: false
+images:
+  # 主应用：上游 25.x 完整三段 SemVer 家族（25.0.8 ... 25.0.99），排除 latest/testing 与旧 6.8.x 行
+  - id: groupoffice
+    target: service
+    service: groupoffice
+    source: intermesh/groupoffice
+    channel: stable
+    sort: semver
+    tag_regex: '^25\.\d+\.\d+$'
+    delivery:
+      mode: mirror
+  # 辅助 mariadb：11.x 两段式家族（11.8 等）→ 映射为 11.8.0
+  - id: db
+    target: service
+    service: db
+    source: library/mariadb
+    channel: custom
+    sort: semver
+    tag_regex: '^11\.\d+$'
+    version_regex: '^(?P<version>11\.\d+)$'
+    version_template: '{version}.0'
+    delivery:
+      mode: mirror
+stores:
+  official:
+    # Official store publication is intentionally disabled; publish only to Miaomiao Store.
+    enabled: false
+  private:
+    enabled: true
+    skip_if_version_exists: true
+    name: Group Office
+    summary: "Open Source groupware & CRM Software"
