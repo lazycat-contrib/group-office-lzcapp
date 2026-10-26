@@ -8,8 +8,8 @@ application:
       backend: http://groupoffice:80/
 services:
   groupoffice:
-    # upstream: intermesh/groupoffice:25.0.113
-    image: docker.1ms.run/intermesh/groupoffice:25.0.113
+    # upstream: intermesh/groupoffice:25.0.114
+    image: docker.1ms.run/intermesh/groupoffice:25.0.114
     environment:
       - MYSQL_USER=groupoffice
       - MYSQL_PASSWORD={{ stable_secret "groupoffice_db_password" }}
