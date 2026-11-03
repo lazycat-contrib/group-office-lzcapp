@@ -1,6 +1,6 @@
 package: cloud.lazycat.app.groupoffice
 license: MIT
-version: 25.0.114
+version: 25.0.115
 name: Group Office
 description: "Open Source groupware & CRM Software"
 min_os_version: "1.5.0"
